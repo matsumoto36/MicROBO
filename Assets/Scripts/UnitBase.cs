@@ -13,14 +13,15 @@ public abstract class UnitBase : MonoBehaviour {
 	//キャラクタの情報(基本)
 	protected string unitName;					//名前
 	protected UnitType unitType;				//自分のタイプ
-	protected int level;						//レベル
-	protected int experience;					//自分の総経験値
+	int level;									//レベル
+	uint nextLevelEXP;							//レベルアップに必要な経験値
+	uint experience;							//現在の経験値
 	protected int memory;						//記憶力
 
 	protected int _hp;							//基礎体力
 	protected int _power;						//基礎攻撃力
 	protected float _critDamage;				//基礎クリティカルダメージ倍率
-	protected int _defense;						//基礎防御力
+	protected int _defence;						//基礎防御力
 	protected float _speed;						//基礎移動速度
 	protected int _luck;						//基礎運
 
@@ -28,7 +29,7 @@ public abstract class UnitBase : MonoBehaviour {
 	public int hp { get; set; }					//装備後の体力
 	public int power { get; set; }				//装備後の攻撃力
 	public float critDamage { get; set; }		//装備後のクリティカルダメージ倍率
-	public int defense { get; set; }			//装備後の防御力
+	public int defence { get; set; }			//装備後の防御力
 	public float speed { get; set; }			//装備後の移動速度
 	public int luck { get; set; }				//装備後の運
 
@@ -41,12 +42,14 @@ public abstract class UnitBase : MonoBehaviour {
 
 		Debug.Log("UnitInitStart");
 
+		//初期設定
+		level = 1;
 		isFreeze = false;
 
-		if(equipModule) {
-			//パラメータ計算
-			EquipModule(equipModule);
-		}
+		//初期装備のパラメータ計算
+		EquipModule(equipModule);
+		//必要経験値を取得
+		nextLevelEXP = GameBalance.INITNEXTLEVELEXP;
 
 		Debug.Log("UnitInitEnd");
 	}
@@ -76,21 +79,24 @@ public abstract class UnitBase : MonoBehaviour {
 
 		int pow = unit.power;
 
-		//Damage balance (小数点切り捨て)
-		//Damage = power - 0.9 * defence +- rand(power / 16)
-		int damage = (int)(pow - 0.9f * defense + Random.Range(-pow / 16, pow / 16));
+		//ダメージ量取得
+		int damage = GameBalance.GetDamage(pow, defence);
+
+		Debug.Log(unit.unitType + " > " + unitType + " Attack!  Damage : " + damage);
+
 		hp -= damage;
 
 		//死亡チェック
 		if(hp <= 0) {
-			Death();
+			Death(unit);
 		}
 	}
 
 	/// <summary>
 	/// キャラクタが死亡したときの処理
 	/// </summary>
-	public virtual void Death() {
+	/// <param name="unit">とどめを刺したキャラクタ</param>
+	public virtual void Death(UnitBase unit) {
 
 		Destroy(gameObject);
 	}
@@ -101,22 +107,55 @@ public abstract class UnitBase : MonoBehaviour {
 	/// <param name="module">装備するモジュール</param>
 	public void EquipModule(ModuleBase module) {
 
-		Debug.Log("Equip");
-
-		//装備
-		equipModule = module;
-
 		//基礎パラメータ反映
 		hp = _hp;
 		power = _power;
 		critDamage = _critDamage;
-		defense = _defense;
+		defence = _defence;
 		speed = _speed;
 		luck = _luck;
 
-		//最終パラメータ反映
-		equipModule.Attach(this);
+		if(equipModule) {
+			Debug.Log("EquipStart");
+			//装備
+			equipModule = module;
+			//最終パラメータ反映
+			equipModule.Attach(this);
+		}
+		else {
+			Debug.Log("NoEquipModule!");
+		}
 
+
+	}
+
+	/// <summary>
+	/// 経験値を取得する
+	/// </summary>
+	/// <param name="exp">取得経験値</param>
+	public void GainEXP(int exp) {
+
+		long t = System.DateTime.Now.ToBinary();
+
+		experience += (uint)exp;
+		//連続でレベルアップする可能性があるのでチェック
+		while(experience >= nextLevelEXP) {
+
+			//レベルアップ処理
+			experience -= nextLevelEXP;
+			level++;
+			nextLevelEXP = GameBalance.GetNextLevelEXPFromEXP(nextLevelEXP, 1);
+			//nextLevelEXP = GameBalance.GetNextLevelEXPFromLevel(level);
+
+			Debug.Log(unitType + " LevelUp! Level:" + level + "NextEXP:" + nextLevelEXP);
+		}
+
+		//装備にも経験値を取得させる
+		if(equipModule) {
+			equipModule.GainEXP(exp);
+		}
+
+		Debug.Log("time:" + (System.DateTime.Now.ToBinary() - t));
 	}
 
 	public void OnTriggerEnter2D(Collider2D other) {

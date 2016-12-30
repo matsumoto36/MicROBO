@@ -21,8 +21,10 @@ public abstract class ModuleBase : MonoBehaviour {
 	float _waitTime;					//待ち時間計算用
 
 	//パラメータ
-	protected int experience;			//装備の経験値
-	protected int level;				//装備のレベル
+	protected string moduleName;		//装備品の名前
+	uint nextLevelEXP;					//レベルアップに必要な経験値
+	uint experience;					//現在の経験値
+	int level;							//装備のレベル
 	protected float _param_growth;		//成長度によるパラメータ補正値(割合)
 	protected float growthDifficult;	//成長のしやすさ
 	protected float growthScale;		//成長量の補正値
@@ -33,8 +35,9 @@ public abstract class ModuleBase : MonoBehaviour {
 
 	protected float waitTime;			//待ち時間
 
-	void Start() {
+	public virtual void Start() {
 		_waitTime = 0;
+		nextLevelEXP = GameBalance.INITNEXTLEVELEXP;
 	}
 
 	public virtual void Update() {
@@ -62,6 +65,26 @@ public abstract class ModuleBase : MonoBehaviour {
 		owner = unit;
 		//装備時のメソッドを実行
 		attach(unit);
+	}
+
+	/// <summary>
+	/// 経験値を取得する
+	/// </summary>
+	/// <param name="exp">取得経験値</param>
+	public void GainEXP(int exp) {
+
+		experience += (uint)exp;
+		//連続でレベルアップする可能性があるのでチェック
+		while(experience >= nextLevelEXP) {
+			//レベルアップ処理
+			experience -= nextLevelEXP;
+			level++;
+			nextLevelEXP = GameBalance.GetNextLevelEXPFromEXP(nextLevelEXP, 1);
+			//nextLevelEXP = GameBalance.GetNextLevelEXPFromLevel(level, 1);
+
+			Debug.Log("Module LevelUp! Level:" + level + "NextEXP:" + nextLevelEXP);
+		}
+
 	}
 
 }

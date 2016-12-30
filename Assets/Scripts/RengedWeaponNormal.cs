@@ -15,6 +15,7 @@ public class RengedWeaponNormal : RengedWeaponBase {
 		base.Start();
 
 		//初期設定
+		moduleName = "DebugModule";
 		_shotPre = shotPre;
 		damageMagnification = 2.0f;
 		isAuto = false;

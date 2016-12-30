@@ -1,18 +1,22 @@
 ﻿
 public class UnitEnemy : UnitBase {
 
+	int expGain;		//落とす経験値
+
 	// Use this for initialization
 	public override void Start() {
 
 		//初期設定
 		unitName = "";
 		unitType = UnitType.Enemy;
-		_hp = 100;
+		_hp = 10;
 		_power = 0;
-		_defense = 0;
+		_defence = 10;
 		_speed = 1;
 		memory = 0;
 		_luck = 1;
+
+		expGain = 5000;
 
 		base.Start();
 	}
@@ -29,5 +33,17 @@ public class UnitEnemy : UnitBase {
 	/// </summary>
 	public override void Move() {
 		
+	}
+
+	/// <summary>
+	/// 敵が死んだときの処理
+	/// </summary>
+	/// <param name="unit">とどめを刺した相手:プレイヤー</param>
+	public override void Death(UnitBase unit) {
+
+
+		//経験値の付与
+		unit.GainEXP(expGain);
+		base.Death(unit);
 	}
 }

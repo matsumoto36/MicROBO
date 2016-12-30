@@ -15,7 +15,7 @@ public class UnitPlayer : UnitBase {
 		unitType = UnitType.Player;
 		_hp = 100;
 		_power = 10;
-		_defense = 10;
+		_defence = 10;
 		_speed = 3;
 		memory = 0;
 		_luck = 1;
@@ -38,8 +38,6 @@ public class UnitPlayer : UnitBase {
 	/// プレイヤーの移動
 	/// </summary>
 	public override void Move() {
-
-		Debug.Log("UnitMove");
 
 		Vector3 moveVec = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 

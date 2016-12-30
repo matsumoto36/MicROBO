@@ -10,7 +10,8 @@ public abstract class WeaponBase: ModuleBase {
 	protected float damageMagnification;	//ダメージ倍率
 
 	// Use this for initialization
-	public virtual void Start () {
+	public override void Start () {
+		base.Start();
 		//武器の行動は攻撃すること
 		action = Attack;
 	}

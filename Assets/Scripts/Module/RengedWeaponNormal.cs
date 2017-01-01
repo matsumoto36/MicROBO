@@ -9,13 +9,14 @@ using UnityEngine;
 public class RengedWeaponNormal : RengedWeaponBase {
 
 	[SerializeField]
-	UnitShot shotPre;
+	UnitShot shotPre;				//出す弾
 
 	public override void Start() {
-		base.Start();
 
+		Debug.Log("WeaponSet");
+			
 		//初期設定
-		moduleName = "DebugModule";
+		moduleName = "NormalWeapon";
 		_shotPre = shotPre;
 		damageMagnification = 2.0f;
 		isAuto = false;
@@ -30,6 +31,8 @@ _shotPre.gameObject, 1, 90, true);
 		attach = (UnitBase unit) => {
 			unit.power = (int)(unit.power * damageMagnification);
 		};
+
+		base.Start();
 	}
 
 }

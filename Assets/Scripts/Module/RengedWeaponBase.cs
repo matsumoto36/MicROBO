@@ -8,7 +8,8 @@ public abstract class RengedWeaponBase : WeaponBase {
 	protected float shotSpeed;
 
 	protected UnitShot _shotPre;
-	protected NWayShotSystem.ShotSet set;
+	protected NWayShotSystem.ShotSet set;	//nway弾
+	protected int penetration;				//貫通回数
 
 	// Use this for initialization
 	public override void Start() {

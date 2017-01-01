@@ -26,9 +26,14 @@ public class UnitPlayer : UnitBase {
 
 	public override void Update() {
 
-		if(Input.GetMouseButton(0)) {
+		if(Input.GetMouseButton(0) && equipModule) {
 			//攻撃
 			Attack();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Q)) {
+			//装備を捨てる(Debug)
+			DropModule();
 		}
 
 		base.Update();

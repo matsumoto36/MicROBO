@@ -33,10 +33,10 @@ public abstract class UnitBase : MonoBehaviour {
 	public float speed { get; set; }			//装備後の移動速度
 	public int luck { get; set; }				//装備後の運
 
-	protected ModuleBase equipModule;				//装備品
+	protected ModuleBase equipModule;			//装備品
 
 	//制御情報
-	public bool isFreeze;                       //操作できないか(true : できない)
+	public bool isFreeze;						//操作できないか(true : できない)
 
 	public virtual void Start() {
 
@@ -115,15 +115,19 @@ public abstract class UnitBase : MonoBehaviour {
 		speed = _speed;
 		luck = _luck;
 
+		//装備
+		equipModule = module;
+
 		if(equipModule) {
 			Debug.Log("EquipStart");
-			//装備
-			equipModule = module;
+			//親子関係設定
+			module.transform.parent = transform;
+			module.transform.localPosition = Vector3.zero;
 			//最終パラメータ反映
 			equipModule.Attach(this);
 		}
 		else {
-			Debug.Log("NoEquipModule!");
+			Debug.Log("NoModule!");
 		}
 
 
@@ -160,7 +164,6 @@ public abstract class UnitBase : MonoBehaviour {
 
 	public void OnTriggerEnter2D(Collider2D other) {
 
-		Debug.Log("Hit : " + other.tag);
 		if(other.tag == "UnitAttack" ) {
 
 			//所有者を取得
@@ -171,5 +174,19 @@ public abstract class UnitBase : MonoBehaviour {
 				Damage(otherUnit);
 			}
 		}
+	}
+
+	/// <summary>
+	/// 装備中の武器を落とす
+	/// </summary>
+	public void DropModule() {
+
+		//装備を落とす動作
+		equipModule.Drop();
+		//装備をはずす
+		equipModule = null;
+
+		//無を装備する
+		EquipModule(null);
 	}
 }

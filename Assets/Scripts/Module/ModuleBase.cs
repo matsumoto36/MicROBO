@@ -14,13 +14,18 @@ public abstract class ModuleBase : MonoBehaviour {
 	protected ModuleAttach attach;		//ユニットに装備したときの処理
 
 	//システム
-	Sprite icon;						//表示用アイコン
-	public UnitBase owner {					//装備の所有者
+	[SerializeField]
+	protected Sprite moduleIcon;		//装備の見た目
+	[SerializeField]
+	protected Sprite itemIcon;			//アイテムのアイコン	
+
+	public UnitBase owner {				//装備の所有者
 		get; private set;
 	}
 	float _waitTime;					//待ち時間計算用
 
 	//パラメータ
+	[SerializeField]
 	protected string moduleName;		//装備品の名前
 	uint nextLevelEXP;					//レベルアップに必要な経験値
 	uint experience;					//現在の経験値
@@ -42,7 +47,6 @@ public abstract class ModuleBase : MonoBehaviour {
 
 	public virtual void Update() {
 		_waitTime += Time.deltaTime;
-		transform.position = owner.transform.position;
 	}
 
 	/// <summary>
@@ -80,11 +84,24 @@ public abstract class ModuleBase : MonoBehaviour {
 			experience -= nextLevelEXP;
 			level++;
 			nextLevelEXP = GameBalance.GetNextLevelEXPFromEXP(nextLevelEXP, 1);
-			//nextLevelEXP = GameBalance.GetNextLevelEXPFromLevel(level, 1);
 
 			Debug.Log("Module LevelUp! Level:" + level + "NextEXP:" + nextLevelEXP);
 		}
 
+	}
+
+	/// <summary>
+	/// 装備状態からアイテム状態へ
+	/// </summary>
+	public void Drop() {
+
+		//アイテム化
+		GameObject itemPre = Resources.Load<GameObject>("Item/ItemModule");
+		GameObject item = Instantiate(itemPre, Vector3.zero, Quaternion.identity);
+		item.GetComponent<ItemModule>().SetModule(moduleName , itemIcon);
+
+		//装備をはずす
+		Destroy(gameObject);
 	}
 
 }

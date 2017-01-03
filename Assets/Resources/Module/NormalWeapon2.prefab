@@ -51,4 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3366480d3c1a0a540a090f44db9793ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moduleIcon: {fileID: 21300000, guid: 543d03895ef6c3641a319963a0355c8e, type: 3}
+  itemIcon: {fileID: 21300000, guid: b197aed200c324f43beea7667ce51849, type: 3}
+  moduleName: NormalWeapon2
   shotPre: {fileID: 114417002860706068, guid: b30a4e4448ea3c2449e2aa372cb68987, type: 2}

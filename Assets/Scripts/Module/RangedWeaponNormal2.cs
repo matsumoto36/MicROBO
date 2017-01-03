@@ -11,7 +11,6 @@ public class RangedWeaponNormal2 : RengedWeaponBase {
 	UnitShot shotPre;               //出す弾
 
 	public override void Start() {
-		base.Start();
 
 		//初期設定
 		moduleName = "NormalWeapon2";
@@ -29,5 +28,6 @@ _shotPre.gameObject, 3, 20, true);
 		attach = (UnitBase unit) => {
 			unit.power = (int)(unit.power * damageMagnification);
 		};
+		base.Start();
 	}
 }

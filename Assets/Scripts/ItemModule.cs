@@ -15,20 +15,14 @@ public class ItemModule : MonoBehaviour {
 	/// </summary>
 	/// <param name="moduleName">モジュールの名前</param>
 	/// <param name="icon">アイテムとして表示される画像</param>
-	public void SetModule(string moduleName, Sprite icon) {
+	public void SetModule(ModuleBase module, Sprite icon) {
 
-		try {
-			//装備品を紐づけ
-			contentModule = Resources.Load<ModuleBase>("Module/" + moduleName);
-			Debug.Log(contentModule.name);
-			//見た目を取得
-			render = GetComponent<SpriteRenderer>();
-			render.sprite = icon;
-		}
-		catch {
-			Debug.Log("file not found : Module/" + moduleName);
-		}
-
+		//装備品を紐づけ
+		contentModule = module;
+		Debug.Log(contentModule.name);
+		//見た目を取得
+		render = GetComponent<SpriteRenderer>();
+		render.sprite = icon;
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
@@ -45,9 +39,6 @@ public class ItemModule : MonoBehaviour {
 	/// </summary>
 	/// <returns>装備品本体のオブジェクト</returns>
 	ModuleBase PickItem() {
-		ModuleBase module = Instantiate(contentModule);
-		//ここでStart()を実行しないとセットされていない項目によりエラー
-		module.Start();
-		return module;
+		return contentModule;
 	}
 }

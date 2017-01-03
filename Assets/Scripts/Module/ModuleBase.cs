@@ -10,8 +10,8 @@ public delegate void ModuleAttach(UnitBase unit);
 /// </summary>
 public abstract class ModuleBase : MonoBehaviour {
 
-	protected ModuleAction action;		//ユニットが使用したときの処理
-	protected ModuleAttach attach;		//ユニットに装備したときの処理
+	protected ModuleAction action;      //ユニットが使用したときの処理
+	protected ModuleAttach attach;      //ユニットに装備したときの処理
 
 	//システム
 	[SerializeField]
@@ -23,6 +23,8 @@ public abstract class ModuleBase : MonoBehaviour {
 		get; private set;
 	}
 	float _waitTime;					//待ち時間計算用
+
+	bool isInit = false;				//初期設定が終わっているか
 
 	//パラメータ
 	[SerializeField]
@@ -48,7 +50,7 @@ public abstract class ModuleBase : MonoBehaviour {
 	public virtual void Update() {
 		_waitTime += Time.deltaTime;
 	}
-
+	
 	/// <summary>
 	/// 装備品の行動
 	/// </summary>
@@ -68,6 +70,10 @@ public abstract class ModuleBase : MonoBehaviour {
 		//所有者を指定
 		owner = unit;
 		//装備時のメソッドを実行
+		if(attach == null) {
+			Start();
+		}
+
 		attach(unit);
 	}
 
@@ -98,10 +104,11 @@ public abstract class ModuleBase : MonoBehaviour {
 		//アイテム化
 		GameObject itemPre = Resources.Load<GameObject>("Item/ItemModule");
 		GameObject item = Instantiate(itemPre, Vector3.zero, Quaternion.identity);
-		item.GetComponent<ItemModule>().SetModule(moduleName , itemIcon);
+		item.GetComponent<ItemModule>().SetModule(this , itemIcon);
+		transform.parent = item.transform;
 
 		//装備をはずす
-		Destroy(gameObject);
+		//Destroy(gameObject);
 	}
 
 }

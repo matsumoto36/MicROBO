@@ -99,7 +99,7 @@ public abstract class UnitBase : MonoBehaviour {
 	public virtual void Death(UnitBase unit) {
 
 		Destroy(gameObject);
-	}
+	}	
 
 	/// <summary>
 	/// キャラクタに装備させるときの処理
@@ -129,8 +129,6 @@ public abstract class UnitBase : MonoBehaviour {
 		else {
 			Debug.Log("NoModule!");
 		}
-
-
 	}
 
 	/// <summary>

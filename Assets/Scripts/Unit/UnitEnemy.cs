@@ -1,7 +1,9 @@
 ﻿
 public class UnitEnemy : UnitBase {
 
-	int expGain;		//落とす経験値
+	int expGain;        //落とす経験値
+
+	public ModuleBase testmodule;
 
 	// Use this for initialization
 	public override void Start() {
@@ -15,8 +17,10 @@ public class UnitEnemy : UnitBase {
 		_speed = 1;
 		memory = 0;
 		_luck = 1;
+		equipModule = testmodule;
 
 		expGain = 5000;
+
 
 		base.Start();
 	}

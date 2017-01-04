@@ -1,9 +1,12 @@
 ﻿
+/// <summary>
+/// 敵
+/// </summary>
 public class UnitEnemy : UnitBase {
 
 	int expGain;        //落とす経験値
 
-	public ModuleBase testmodule;
+	public WeaponBase testmodule;
 
 	// Use this for initialization
 	public override void Start() {
@@ -12,12 +15,12 @@ public class UnitEnemy : UnitBase {
 		unitName = "";
 		unitType = UnitType.Enemy;
 		_hp = 10;
-		_power = 0;
+		_power = 4;
 		_defence = 10;
 		_speed = 1;
 		memory = 0;
 		_luck = 1;
-		equipModule = testmodule;
+		equipWeapon = testmodule;
 
 		expGain = 5000;
 

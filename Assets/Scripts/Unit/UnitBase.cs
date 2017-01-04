@@ -33,7 +33,7 @@ public abstract class UnitBase : MonoBehaviour {
 	public float speed { get; set; }			//装備後の移動速度
 	public int luck { get; set; }				//装備後の運
 
-	protected ModuleBase equipModule;			//装備品
+	protected WeaponBase equipWeapon;			//装備品:武器
 
 	//制御情報
 	public bool isFreeze;						//操作できないか(true : できない)
@@ -47,7 +47,9 @@ public abstract class UnitBase : MonoBehaviour {
 		isFreeze = false;
 
 		//初期装備のパラメータ計算
-		EquipModule(equipModule);
+		//CalcStatus();
+		EquipWeapon(equipWeapon);
+
 		//必要経験値を取得
 		nextLevelEXP = GameBalance.INITNEXTLEVELEXP;
 
@@ -102,11 +104,33 @@ public abstract class UnitBase : MonoBehaviour {
 	}	
 
 	/// <summary>
-	/// キャラクタに装備させるときの処理
+	/// キャラクタに武器を装備させるときの処理
 	/// </summary>
 	/// <param name="module">装備するモジュール</param>
-	public void EquipModule(ModuleBase module) {
+	public void EquipWeapon(WeaponBase weapon) {
 
+		//装備
+		equipWeapon = weapon;
+
+		if(equipWeapon) {
+			Debug.Log("EquipStart");
+			//親子関係設定
+			weapon.transform.parent = transform;
+			weapon.name = string.Format("[Weapon] {0}", weapon.moduleName);
+			weapon.transform.localPosition = Vector3.zero;
+			//最終パラメータ反映
+			CalcStatus();
+		}
+		else {
+			Debug.Log("NoModule!");
+		}
+	}
+
+	/// <summary>
+	/// 装備時のステータスを計算する
+	/// </summary>
+	void CalcStatus() {
+		
 		//基礎パラメータ反映
 		hp = _hp;
 		power = _power;
@@ -115,20 +139,10 @@ public abstract class UnitBase : MonoBehaviour {
 		speed = _speed;
 		luck = _luck;
 
-		//装備
-		equipModule = module;
+		//装備後パラメータ反映
+		if(equipWeapon) equipWeapon.Attach(this);
 
-		if(equipModule) {
-			Debug.Log("EquipStart");
-			//親子関係設定
-			module.transform.parent = transform;
-			module.transform.localPosition = Vector3.zero;
-			//最終パラメータ反映
-			equipModule.Attach(this);
-		}
-		else {
-			Debug.Log("NoModule!");
-		}
+
 	}
 
 	/// <summary>
@@ -147,14 +161,12 @@ public abstract class UnitBase : MonoBehaviour {
 			experience -= nextLevelEXP;
 			level++;
 			nextLevelEXP = GameBalance.GetNextLevelEXPFromEXP(nextLevelEXP, 1);
-			//nextLevelEXP = GameBalance.GetNextLevelEXPFromLevel(level);
-
 			Debug.Log(unitType + " LevelUp! Level:" + level + "NextEXP:" + nextLevelEXP);
 		}
 
 		//装備にも経験値を取得させる
-		if(equipModule) {
-			equipModule.GainEXP(exp);
+		if(equipWeapon) {
+			equipWeapon.GainEXP(exp);
 		}
 
 		Debug.Log("time:" + (System.DateTime.Now.ToBinary() - t));
@@ -180,11 +192,11 @@ public abstract class UnitBase : MonoBehaviour {
 	public void DropModule() {
 
 		//装備を落とす動作
-		equipModule.Drop();
+		equipWeapon.Drop();
 		//装備をはずす
-		equipModule = null;
+		equipWeapon = null;
 
-		//無を装備する
-		EquipModule(null);
+		//ステータス計算
+		CalcStatus();
 	}
 }

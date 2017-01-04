@@ -1,9 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public delegate void ModuleAction();
 public delegate void ModuleAttach(UnitBase unit);
+
+public enum ModuleType {
+	Weapon,
+	Armor,
+}
 
 /// <summary>
 /// 様々な装備品の基底クラス
@@ -15,20 +21,22 @@ public abstract class ModuleBase : MonoBehaviour {
 
 	//システム
 	[SerializeField]
-	protected Sprite moduleIcon;		//装備の見た目
+	protected Sprite moduleIcon;        //装備の見た目
 	[SerializeField]
-	protected Sprite itemIcon;			//アイテムのアイコン	
+	protected Sprite itemIcon;          //アイテムのアイコン	
 
-	public UnitBase owner {				//装備の所有者
+	public string moduleName {          //装備品の名前
+		get; protected set;
+	}
+	public UnitBase owner {             //装備の所有者
 		get; private set;
 	}
-	float _waitTime;					//待ち時間計算用
-
-	bool isInit = false;				//初期設定が終わっているか
+	public ModuleType moduleType {      //装備のタイプ
+		get; protected set;
+	}
+	float _waitTime;                    //待ち時間計算用
 
 	//パラメータ
-	[SerializeField]
-	protected string moduleName;		//装備品の名前
 	uint nextLevelEXP;					//レベルアップに必要な経験値
 	uint experience;					//現在の経験値
 	int level;							//装備のレベル
@@ -104,11 +112,9 @@ public abstract class ModuleBase : MonoBehaviour {
 		//アイテム化
 		GameObject itemPre = Resources.Load<GameObject>("Item/ItemModule");
 		GameObject item = Instantiate(itemPre, Vector3.zero, Quaternion.identity);
+		item.name = string.Format("[Item] {0}", moduleName);
 		item.GetComponent<ItemModule>().SetModule(this , itemIcon);
 		transform.parent = item.transform;
-
-		//装備をはずす
-		//Destroy(gameObject);
 	}
 
 }

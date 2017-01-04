@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤー
+/// </summary>
 public class UnitPlayer : UnitBase {
 
-	public ModuleBase module;
+	public WeaponBase module;
 
 	// Use this for initialization
 	public override void Start() {
@@ -19,14 +22,14 @@ public class UnitPlayer : UnitBase {
 		_speed = 3;
 		memory = 0;
 		_luck = 1;
-		equipModule = module;
+		equipWeapon = module;
 
 		base.Start();
 	}
 
 	public override void Update() {
 
-		if(Input.GetMouseButton(0) && equipModule) {
+		if(Input.GetMouseButton(0) && equipWeapon) {
 			//攻撃
 			Attack();
 		}
@@ -54,6 +57,6 @@ public class UnitPlayer : UnitBase {
 	/// </summary>
 	public override void Attack() {
 		//モジュールのアクションを発動
-		equipModule.Action();
+		equipWeapon.Action();
 	}
 }

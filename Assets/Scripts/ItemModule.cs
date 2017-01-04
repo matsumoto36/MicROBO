@@ -29,16 +29,24 @@ public class ItemModule : MonoBehaviour {
 		
 		if(other.tag == "Unit") {
 			//アイテムから装備を取り出す
-			other.GetComponent<UnitBase>().EquipModule(PickItem());
+			PickItem(other.GetComponent<UnitBase>());
 			Destroy(gameObject);
 		}
 	}
 
 	/// <summary>
-	/// アイテムから装備品に変換
+	/// 装備品を取り出して装備させる
 	/// </summary>
 	/// <returns>装備品本体のオブジェクト</returns>
-	ModuleBase PickItem() {
-		return contentModule;
+	void PickItem(UnitBase unit) {
+
+		//指定したタイプ別に装備する
+		switch(contentModule.moduleType) {
+			case ModuleType.Armor:
+				break;
+			case ModuleType.Weapon:
+				unit.EquipWeapon((WeaponBase)contentModule);
+				break;
+		}
 	}
 }

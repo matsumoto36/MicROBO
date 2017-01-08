@@ -10,15 +10,20 @@ public class UnitPlayer : UnitBase {
 
 	public WeaponBase module;
 
+	void Awake() {
+		//自分を登録
+		GameManager.UnitPlayer = this;
+	}
+
 	// Use this for initialization
 	public override void Start() {
 
 		//初期設定
-		unitName = "";
+		unitName = "Player";
 		unitType = UnitType.Player;
 		_hp = 100;
 		_power = 10;
-		_defence = 10;
+		_defence = 5;
 		_speed = 3;
 		memory = 0;
 		_luck = 1;
@@ -29,14 +34,14 @@ public class UnitPlayer : UnitBase {
 
 	public override void Update() {
 
-		if(Input.GetMouseButton(0) && equipWeapon) {
+		if(Input.GetMouseButton(0)) {
 			//攻撃
 			Attack();
 		}
 
 		if(Input.GetKeyDown(KeyCode.Q)) {
 			//装備を捨てる(Debug)
-			DropModule();
+			DropModule(equipWeapon);
 		}
 
 		base.Update();
@@ -57,6 +62,6 @@ public class UnitPlayer : UnitBase {
 	/// </summary>
 	public override void Attack() {
 		//モジュールのアクションを発動
-		equipWeapon.Action();
+		if(equipWeapon) equipWeapon.Action();
 	}
 }

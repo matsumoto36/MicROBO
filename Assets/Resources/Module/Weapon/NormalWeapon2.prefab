@@ -33,7 +33,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1595341438771000}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.96632624, y: -1.2260671, z: 4.99157}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -54,3 +54,4 @@ MonoBehaviour:
   moduleIcon: {fileID: 21300000, guid: 543d03895ef6c3641a319963a0355c8e, type: 3}
   itemIcon: {fileID: 21300000, guid: b197aed200c324f43beea7667ce51849, type: 3}
   shotPre: {fileID: 114417002860706068, guid: b30a4e4448ea3c2449e2aa372cb68987, type: 2}
+  meleePre: {fileID: 114046307152907238, guid: dc839cfe32046c1499f3385e7c2ad810, type: 2}

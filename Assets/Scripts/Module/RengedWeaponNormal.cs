@@ -24,9 +24,9 @@ public class RengedWeaponNormal : WeaponBase {
 
 		//遠距離攻撃用モジュール設定
 		RengedWeaponModule rangeModule = new RengedWeaponModule();
-		rangeModule._shotPre = shotPre;
+		rangeModule.shotPre = shotPre;
 		rangeModule.set = new NWayShotSystem.ShotSet(
-			rangeModule._shotPre.gameObject, 1, 90, true);
+			rangeModule.shotPre.gameObject, 1, 90, true);
 		rangeModule.shotSpeed = 5;
 		//遠距離攻撃用モジュール追加
 		weaponModuleList.Add(rangeModule);

@@ -7,8 +7,7 @@ using UnityEngine;
 /// </summary>
 static class GameBalance {
 
-	public const int INITNEXTLEVELEXP = 10;
-
+	public const int INITNEXTLEVELEXP = 10;	//レベル1から2になるまでの必要経験値
 
 	/// <summary>
 	/// ダメージ量計算
@@ -17,9 +16,8 @@ static class GameBalance {
 	/// <param name="defence">自分の防御力</param>
 	/// <returns>自分へのダメージ</returns>
 	public static int GetDamage(int attackPower, int defence) {
-		
-		//Damage balance (小数点切り捨て)
-		//Damage = power - 0.9 * defence +- rand(power / 16)
+ 
+		//Damage(小数点切り捨て) = power - 0.9 * defence +- rand(power / 16)
 		return (int)(attackPower - 0.9f * defence + Random.Range(-defence / 16, attackPower / 16));
 	}
 
@@ -58,7 +56,9 @@ static class GameBalance {
 
 	public static uint GetNextLevelEXPFromEXP(uint prevExp, float growthDiffcult) {
 
-		//必要な経験値 = 前のレベルの必要経験値 * (1.1 * 成長のしやすさ)
+		//必要な経験値 = 前のレベルの必要経験値 * (1.3 * 成長のしやすさ)
 		return (uint)(prevExp * (1.3f * growthDiffcult)) ;
 	}
+
+
 }

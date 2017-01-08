@@ -11,7 +11,7 @@ public class RengedWeaponModule : IWeaponModule {
 	public float shotSpeed {
 		get; set;
 	}
-	public UnitShot _shotPre {
+	public UnitShot shotPre {
 		get; set;
 	}
 	public NWayShotSystem.ShotSet set {	//nway弾
@@ -28,9 +28,21 @@ public class RengedWeaponModule : IWeaponModule {
 	public void Attack(UnitBase owner) {
 		Debug.Log("RangedAttack");
 
-		//マウス取得
-		Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		Vector3 shotVec = (mousePosition - owner.transform.position).normalized;
+		Vector3 shotVec = Vector3.zero;
+		//キャラクタによって向きの取得方法を変える
+		switch(owner.unitType) {
+			case UnitType.Player:
+				//マウス取得
+				Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				shotVec = (mousePosition - owner.transform.position).normalized;
+				break;
+			case UnitType.Enemy:
+				//キャストして持ってくる
+				UnitEnemy e = (UnitEnemy)owner;
+				shotVec = e.attackAngle.normalized;
+				break;
+
+		}
 
 		//撃つ
 		NWayShotSystem.ShotResult result = NWayShotSystem.Shot(set, owner.transform.position, shotVec);
@@ -42,6 +54,8 @@ public class RengedWeaponModule : IWeaponModule {
 			shot.owner = owner;
 			//スピードを設定
 			shot.shotSpeed = shotSpeed;
+			//貫通回数を設定
+			shot.penetration = penetration;
 		}
 	}
 }

@@ -9,8 +9,10 @@ using UnityEngine;
 public class RangedWeaponNormal2 : WeaponBase {
 
 	[SerializeField]
-	UnitShot shotPre;               //出す弾
+	UnitShot shotPre;				//出す弾
 
+	[SerializeField]
+	UnitMelee meleePre;				//出す武器
 
 	public override void Awake() {
 		base.Awake();
@@ -23,14 +25,24 @@ public class RangedWeaponNormal2 : WeaponBase {
 		isAuto = true;
 		waitTime = 0.3f;
 
-		//遠距離攻撃用モジュール設定
-		RengedWeaponModule rangeModule = new RengedWeaponModule();
-		rangeModule._shotPre = shotPre;
-		rangeModule.set = new NWayShotSystem.ShotSet(
-			rangeModule._shotPre.gameObject, 3, 20, true);
-		rangeModule.shotSpeed = 6;
-		//遠距離攻撃用モジュール追加
-		weaponModuleList.Add(rangeModule);
+		weaponModuleList = new List<IWeaponModule>();
+
+		////遠距離攻撃用モジュール設定
+		//RengedWeaponModule rangeModule = new RengedWeaponModule();
+		//rangeModule.shotPre = shotPre;
+		//rangeModule.set = new NWayShotSystem.ShotSet(
+		//	rangeModule.shotPre.gameObject, 3, 20, true);
+		//rangeModule.shotSpeed = 6;
+		////遠距離攻撃用モジュール追加
+		//weaponModuleList.Add(rangeModule);
+
+		//近接攻撃用モジュール設定
+		MeleeWeaponModule meleeModule = new MeleeWeaponModule();
+		meleeModule.meleePre = meleePre;
+		meleeModule.meleeDuration = 0.5f;
+		meleeModule.meleeDir = 179.0f;
+		//近接攻撃用モジュール追加
+		weaponModuleList.Add(meleeModule);
 
 		//装備時の動作
 		attach = (UnitBase unit) => {

@@ -7,15 +7,27 @@ public enum UnitType {
 	Enemy,
 }
 
-// キャラクタのデータの親
+/// <summary>
+/// キャラクタのデータの基底クラス
+/// </summary>
 public abstract class UnitBase : MonoBehaviour {
 
 	//キャラクタの情報(基本)
-	protected string unitName;					//名前
-	protected UnitType unitType;				//自分のタイプ
-	int level;									//レベル
-	uint nextLevelEXP;							//レベルアップに必要な経験値
-	uint experience;							//現在の経験値
+	public string unitName {					//名前
+		get; protected set;
+	}
+	public UnitType unitType {					//自分のタイプ
+		get; protected set;
+	}
+	public int level {							//レベル
+		get; private set;
+	}
+	public uint nextLevelEXP {					//レベルアップに必要な経験値
+		get; private set;
+	}
+	public uint experience {					//現在の経験値
+		get; private set;
+	}
 	protected int memory;						//記憶力
 
 	protected int _hp;							//基礎体力
@@ -26,17 +38,37 @@ public abstract class UnitBase : MonoBehaviour {
 	protected int _luck;						//基礎運
 
 	//キャラクタの情報(装備後)
-	public int hp { get; set; }					//装備後の体力
+	public int maxHp { get; set; }				//装備後の最大体力
+	public int nowHp { get; set; }				//装備後の現在の体力
 	public int power { get; set; }				//装備後の攻撃力
 	public float critDamage { get; set; }		//装備後のクリティカルダメージ倍率
 	public int defence { get; set; }			//装備後の防御力
 	public float speed { get; set; }			//装備後の移動速度
 	public int luck { get; set; }				//装備後の運
 
-	protected WeaponBase equipWeapon;			//装備品:武器
+	public WeaponBase equipWeapon {				//装備品:武器
+		get; protected set;
+	}
 
 	//制御情報
-	public bool isFreeze;						//操作できないか(true : できない)
+	public bool isFreeze;                       //操作できないか(true : できない)
+
+	/// <summary>
+	/// キャラクタの能力値をレベル1の状態にする
+	/// </summary>
+	public void SetInitStatus() {
+		level = 1;										//レベル
+		nextLevelEXP = GameBalance.INITNEXTLEVELEXP;	//レベルアップに必要な経験値
+		experience = 0;									//現在の経験値
+		memory = 1;										//記憶力
+
+		_hp = 10;										//基礎体力
+		_power = 2;										//基礎攻撃力
+		_critDamage = 1.1f;								//基礎クリティカルダメージ倍率
+		_defence = 2;									//基礎防御力
+		_speed = 5;										//基礎移動速度
+		_luck = 1;										//基礎運
+}
 
 	public virtual void Start() {
 
@@ -49,6 +81,8 @@ public abstract class UnitBase : MonoBehaviour {
 		//初期装備のパラメータ計算
 		//CalcStatus();
 		EquipWeapon(equipWeapon);
+		//全回復
+		nowHp = maxHp;
 
 		//必要経験値を取得
 		nextLevelEXP = GameBalance.INITNEXTLEVELEXP;
@@ -86,10 +120,10 @@ public abstract class UnitBase : MonoBehaviour {
 
 		Debug.Log(unit.unitType + " > " + unitType + " Attack!  Damage : " + damage);
 
-		hp -= damage;
+		nowHp -= damage;
 
 		//死亡チェック
-		if(hp <= 0) {
+		if(nowHp <= 0) {
 			Death(unit);
 		}
 	}
@@ -109,6 +143,9 @@ public abstract class UnitBase : MonoBehaviour {
 	/// <param name="module">装備するモジュール</param>
 	public void EquipWeapon(WeaponBase weapon) {
 
+		//違う装備をすでに装備していた場合は落とす
+		if(equipWeapon && equipWeapon != weapon) DropModule(equipWeapon);
+
 		//装備
 		equipWeapon = weapon;
 
@@ -123,6 +160,8 @@ public abstract class UnitBase : MonoBehaviour {
 		}
 		else {
 			Debug.Log("NoModule!");
+			//最終パラメータ反映
+			CalcStatus();
 		}
 	}
 
@@ -132,7 +171,7 @@ public abstract class UnitBase : MonoBehaviour {
 	void CalcStatus() {
 		
 		//基礎パラメータ反映
-		hp = _hp;
+		maxHp = _hp;
 		power = _power;
 		critDamage = _critDamage;
 		defence = _defence;
@@ -142,7 +181,8 @@ public abstract class UnitBase : MonoBehaviour {
 		//装備後パラメータ反映
 		if(equipWeapon) equipWeapon.Attach(this);
 
-
+		//体力調整
+		nowHp = Mathf.Min(nowHp, maxHp);
 	}
 
 	/// <summary>
@@ -177,7 +217,7 @@ public abstract class UnitBase : MonoBehaviour {
 		if(other.tag == "UnitAttack" ) {
 
 			//所有者を取得
-			UnitBase otherUnit = other.GetComponent<UnitShot>().owner;
+			UnitBase otherUnit = other.GetComponent<IUnitAttack>().owner;
 
 			//自分と違うタイプならダメージ発生
 			if(otherUnit.unitType != unitType) {
@@ -187,14 +227,14 @@ public abstract class UnitBase : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// 装備中の武器を落とす
+	/// 装備中の装備を落とす
 	/// </summary>
-	public void DropModule() {
+	public void DropModule(ModuleBase module) {
 
 		//装備を落とす動作
-		equipWeapon.Drop();
+		if(module) module.Drop();
 		//装備をはずす
-		equipWeapon = null;
+		module = null;
 
 		//ステータス計算
 		CalcStatus();

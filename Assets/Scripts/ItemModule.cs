@@ -7,8 +7,15 @@ using UnityEngine;
 /// </summary>
 public class ItemModule : MonoBehaviour {
 
-	ModuleBase contentModule;	//中身の装備品
-	SpriteRenderer render;		//見た目
+	const float PICKUPWAIT = 1.0f; //アイテムが取得できるようになるまでの時間
+	float _wait = 0;				//時間計算用
+
+	ModuleBase contentModule;		//中身の装備品
+	SpriteRenderer render;			//見た目
+	
+	void Update() {
+		_wait += Time.deltaTime;
+	}
 
 	/// <summary>
 	/// アイテムに必要な情報をセット
@@ -26,7 +33,10 @@ public class ItemModule : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		
+
+		//取得可能でなければ終了
+		if(_wait < PICKUPWAIT) return;
+
 		if(other.tag == "Unit") {
 			//アイテムから装備を取り出す
 			PickItem(other.GetComponent<UnitBase>());

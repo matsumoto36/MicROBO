@@ -16,25 +16,25 @@ public enum ModuleType {
 /// </summary>
 public abstract class ModuleBase : MonoBehaviour {
 
-	protected ModuleAction action;      //ユニットが使用したときの処理
-	protected ModuleAttach attach;      //ユニットに装備したときの処理
+	protected ModuleAction action;		//ユニットが使用したときの処理
+	protected ModuleAttach attach;		//ユニットに装備したときの処理
 
 	//システム
 	[SerializeField]
-	protected Sprite moduleIcon;        //装備の見た目
+	protected Sprite moduleIcon;		//装備の見た目
 	[SerializeField]
-	protected Sprite itemIcon;          //アイテムのアイコン	
+	protected Sprite itemIcon;			//アイテムのアイコン
 
-	public string moduleName {          //装備品の名前
+	public string moduleName {			//装備品の名前
 		get; protected set;
 	}
-	public UnitBase owner {             //装備の所有者
+	public UnitBase owner {				//装備の所有者
 		get; private set;
 	}
-	public ModuleType moduleType {      //装備のタイプ
+	public ModuleType moduleType {		//装備のタイプ
 		get; protected set;
 	}
-	float _waitTime;                    //待ち時間計算用
+	float _waitTime;					//待ち時間計算用
 
 	//パラメータ
 	uint nextLevelEXP;					//レベルアップに必要な経験値
@@ -48,7 +48,9 @@ public abstract class ModuleBase : MonoBehaviour {
 		get; protected set;
 	}
 
-	protected float waitTime;			//待ち時間
+	public float waitTime {				//待ち時間
+		get; protected set;
+	}
 
 	public virtual void Start() {
 		_waitTime = 0;
@@ -65,7 +67,7 @@ public abstract class ModuleBase : MonoBehaviour {
 	public void Action() {
 
 		if(waitTime < _waitTime) {
-			action();
+			if(action != null) action();
 			_waitTime = 0;
 		}
 	}
@@ -90,7 +92,8 @@ public abstract class ModuleBase : MonoBehaviour {
 	/// </summary>
 	/// <param name="exp">取得経験値</param>
 	public void GainEXP(int exp) {
-
+		
+		//経験値取得
 		experience += (uint)exp;
 		//連続でレベルアップする可能性があるのでチェック
 		while(experience >= nextLevelEXP) {
@@ -101,7 +104,7 @@ public abstract class ModuleBase : MonoBehaviour {
 
 			Debug.Log("Module LevelUp! Level:" + level + "NextEXP:" + nextLevelEXP);
 		}
-
+		
 	}
 
 	/// <summary>
@@ -111,7 +114,7 @@ public abstract class ModuleBase : MonoBehaviour {
 
 		//アイテム化
 		GameObject itemPre = Resources.Load<GameObject>("Item/ItemModule");
-		GameObject item = Instantiate(itemPre, Vector3.zero, Quaternion.identity);
+		GameObject item = Instantiate(itemPre, transform.position, Quaternion.identity);
 		item.name = string.Format("[Item] {0}", moduleName);
 		item.GetComponent<ItemModule>().SetModule(this , itemIcon);
 		transform.parent = item.transform;

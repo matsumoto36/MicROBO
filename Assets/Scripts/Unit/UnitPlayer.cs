@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class UnitPlayer : UnitBase {
 
+	int memory;					//装備の記憶力
+
 	public WeaponBase module;
 
 	void Awake() {

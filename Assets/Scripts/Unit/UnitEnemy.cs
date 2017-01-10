@@ -49,7 +49,6 @@ public class UnitEnemy : UnitBase {
 		_power = 4;
 		_defence = 10;
 		_speed = 1;
-		memory = 0;
 		_luck = 1;
 		equipWeapon = testmodule;
 

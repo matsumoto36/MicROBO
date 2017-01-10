@@ -8,15 +8,13 @@ using UnityEngine.UI;
 /// </summary>
 public class UnitInfo : MonoBehaviour {
 
-
 	Color[] UIColor;            //UIのパネルの色
 	Color[] HPColor;			//HPの色
 
 	[SerializeField]
-	GameObject infoUI;			//UI本体
+	UnitInfoContiner[] UISet;	//情報格納用クラス
 
-	UnitInfoSet UISet;			//情報格納用クラス
-	UnitBase currentTargetUnit;	//表示対象のキャラクタ
+	UnitBase currentTargetUnit; //表示対象のキャラクタ
 
 	// Use this for initialization
 	void Start () {
@@ -29,17 +27,6 @@ public class UnitInfo : MonoBehaviour {
 		HPColor = new Color[2];
 		HPColor[(int)UnitType.Player] = new Color(0, 0.8f, 0);
 		HPColor[(int)UnitType.Enemy] = new Color(0.8f, 0, 0);
-
-		//オブジェクト取得
-		UISet = new UnitInfoSet();
-		UISet.backImage = infoUI.GetComponent<Image>();
-		UISet.texUnitName = infoUI.transform.FindChild("UnitName").GetComponent<Text>();
-		UISet.unitImage = infoUI.transform.FindChild("UnitImage").GetComponent<Image>();
-
-		Transform t = infoUI.transform.FindChild("LifeBar");
-		UISet.texUnitMaxHp = t.FindChild("UnitMaxHP").GetComponent<Text>();
-		UISet.texUnitNowHp = t.FindChild("UnitNowHP").GetComponent<Text>();
-		UISet.unitLifeBar = t.FindChild("BarForword").GetComponent<Image>();
 	}
 	
 	// Update is called once per frame
@@ -55,63 +42,89 @@ public class UnitInfo : MonoBehaviour {
 				currentTargetUnit = u;
 			}
 			//ステータスの表示
-			ShowStatus();
+			ShowInfo(GameSettings.isUISimple);
 		}
 		else {
-			infoUI.SetActive(false);
+			//触れてない場合は非表示
+			UISet[0].UIBody.gameObject.SetActive(false);
+			UISet[1].UIBody.gameObject.SetActive(false);
 		}
 	}
 
 	/// <summary>
 	/// ステータスを表示する
 	/// </summary>
-	void ShowStatus() {
-		
+	void ShowInfo(bool isSimple) {
+
+		int infoNum = isSimple ? 1 : 0;
+
 		//表示
-		infoUI.SetActive(true);
+		UISet[infoNum].UIBody.gameObject.SetActive(true);
+		Debug.Log("mouse : " + Input.mousePosition);
+		Debug.Log("uiset : " + UISet[infoNum].UIBody.sizeDelta);
+		//UIの位置を設定
+		if(Input.mousePosition.x > Screen.width - UISet[infoNum].UIBody.sizeDelta.x &&
+			Input.mousePosition.y < UISet[infoNum].UIBody.sizeDelta.y) {
+			//マウスとUIが被るので別の位置に
+			SetUIPosition(isSimple, 1);
+		}
+		else {
+			//普通の位置
+			SetUIPosition(isSimple, 0);
+		}
 
 		//UIのパネルの色を設定
-		UISet.backImage.color = UIColor[(int)currentTargetUnit.unitType];
+		foreach(Image i in UISet[infoNum].UIPanels) {
+			i.color = UIColor[(int)currentTargetUnit.unitType];
+		}
 
 		//HPのバーの色を設定
-		UISet.unitLifeBar.color = HPColor[(int)currentTargetUnit.unitType];
+		UISet[infoNum].unitLifeBar.color = HPColor[(int)currentTargetUnit.unitType];
 
 		//数値・画像データ反映
-		UISet.texUnitName.text = currentTargetUnit.unitName;
-		UISet.texUnitMaxHp.text = currentTargetUnit.maxHp.ToString();
-		UISet.texUnitNowHp.text = currentTargetUnit.nowHp.ToString();
+		UISet[infoNum].texUnitName.text = currentTargetUnit.unitName;
+		UISet[infoNum].texUnitMaxHp.text = currentTargetUnit.maxHp.ToString();
+		UISet[infoNum].texUnitNowHp.text = currentTargetUnit.nowHp.ToString();
 
-		UISet.unitImage.sprite = currentTargetUnit.gameObject.GetComponentInChildren<SpriteRenderer>().sprite;
+		UISet[infoNum].unitImage.sprite = currentTargetUnit.gameObject.GetComponentInChildren<SpriteRenderer>().sprite;
 
 		//割合の情報を反映
 		Vector3 scale = new Vector3((float)currentTargetUnit.nowHp / currentTargetUnit.maxHp , 1, 1);
-		UISet.unitLifeBar.rectTransform.localScale = scale;
-	}
-}
+		UISet[infoNum].unitLifeBar.rectTransform.localScale = scale;
 
-/// <summary>
-/// キャラクタの表示用UIのオブジェクトを格納する
-/// </summary>
-class UnitInfoSet {
+		if(!isSimple) {//詳細表示の項目を設定
 
-	public Image backImage {	//UIのパネル
-		get; set;
+			//ステータス類
+			UISet[infoNum].texUnitPower.text = currentTargetUnit.power.ToString();
+			UISet[infoNum].texUnitDefence.text = currentTargetUnit.defence.ToString();
+			UISet[infoNum].texUnitSpeed.text = currentTargetUnit.speed.ToString();
+			UISet[infoNum].texUnitLuck.text = currentTargetUnit.luck.ToString();
+
+			//経験値類
+			UISet[infoNum].texUnitLevel.text = currentTargetUnit.level.ToString();
+			Vector3 scaleExp = new Vector3((float)currentTargetUnit.experience / currentTargetUnit.nextLevelEXP, 1, 1);
+			UISet[infoNum].unitExpBar.rectTransform.localScale = scaleExp;
+
+			//装備類
+			UISet[infoNum].unitEquipWeapon.text = 
+				currentTargetUnit.equipWeapon ? currentTargetUnit.equipWeapon.moduleName : "";
+			UISet[infoNum].unitEquipArmor.text =
+				currentTargetUnit.equipModule[0] ? currentTargetUnit.equipModule[0].moduleName : "";
+			UISet[infoNum].unitEquipArmor2.text =
+				currentTargetUnit.equipModule[1] ? currentTargetUnit.equipModule[1].moduleName : "";
+		}
 	}
 
-	public Text texUnitName {	//キャラクタの名前
-		get; set;
-	}
-	public Text texUnitMaxHp {	//キャラクタの最大体力
-		get; set;
-	}
-	public Text texUnitNowHp {	//キャラクタの今の体力
-		get; set;
-	}
+	/// <summary>
+	/// UIを指定の位置に移動させる
+	/// </summary>
+	/// <param name="positionNum">UIの表示位置番号</param>
+	void SetUIPosition(bool isSimple, int positionNum) {
 
-	public Image unitImage {	//キャラクタの画像
-		get; set;
-	}
-	public Image unitLifeBar {	//キャラクタのライフバー
-		get; set;
+		int infoNum = isSimple ? 1 : 0;
+		//TODO
+		UISet[infoNum].UIBody.anchoredPosition = UISet[infoNum].UIPos[positionNum];
+		UISet[infoNum].UIBody.anchorMin = UISet[infoNum].UIAnchorMin[positionNum];
+		UISet[infoNum].UIBody.anchorMax = UISet[infoNum].UIAnchorMax[positionNum];
 	}
 }

@@ -28,7 +28,6 @@ public abstract class UnitBase : MonoBehaviour {
 	public uint experience {					//現在の経験値
 		get; private set;
 	}
-	protected int memory;						//記憶力
 
 	protected int _hp;							//基礎体力
 	protected int _power;						//基礎攻撃力
@@ -41,7 +40,6 @@ public abstract class UnitBase : MonoBehaviour {
 	public int maxHp { get; set; }				//装備後の最大体力
 	public int nowHp { get; set; }				//装備後の現在の体力
 	public int power { get; set; }				//装備後の攻撃力
-	public float critDamage { get; set; }		//装備後のクリティカルダメージ倍率
 	public int defence { get; set; }			//装備後の防御力
 	public float speed { get; set; }			//装備後の移動速度
 	public int luck { get; set; }				//装備後の運
@@ -49,9 +47,13 @@ public abstract class UnitBase : MonoBehaviour {
 	public WeaponBase equipWeapon {				//装備品:武器
 		get; protected set;
 	}
+	public ModuleBase[] equipModule {			//装備品:その他
+		get; protected set;
+	}
+
 
 	//制御情報
-	public bool isFreeze;                       //操作できないか(true : できない)
+	public bool isFreeze;						//操作できないか(true : できない)
 
 	/// <summary>
 	/// キャラクタの能力値をレベル1の状態にする
@@ -60,11 +62,9 @@ public abstract class UnitBase : MonoBehaviour {
 		level = 1;										//レベル
 		nextLevelEXP = GameBalance.INITNEXTLEVELEXP;	//レベルアップに必要な経験値
 		experience = 0;									//現在の経験値
-		memory = 1;										//記憶力
 
 		_hp = 10;										//基礎体力
 		_power = 2;										//基礎攻撃力
-		_critDamage = 1.1f;								//基礎クリティカルダメージ倍率
 		_defence = 2;									//基礎防御力
 		_speed = 5;										//基礎移動速度
 		_luck = 1;										//基礎運
@@ -77,6 +77,7 @@ public abstract class UnitBase : MonoBehaviour {
 		//初期設定
 		level = 1;
 		isFreeze = false;
+		equipModule = new ModuleBase[2];
 
 		//初期装備のパラメータ計算
 		//CalcStatus();
@@ -173,7 +174,6 @@ public abstract class UnitBase : MonoBehaviour {
 		//基礎パラメータ反映
 		maxHp = _hp;
 		power = _power;
-		critDamage = _critDamage;
 		defence = _defence;
 		speed = _speed;
 		luck = _luck;
@@ -234,7 +234,13 @@ public abstract class UnitBase : MonoBehaviour {
 		//装備を落とす動作
 		if(module) module.Drop();
 		//装備をはずす
-		module = null;
+		Debug.Log("Drop");
+		switch(module.moduleType) {
+			case ModuleType.Weapon:
+				equipWeapon = null;
+				break;
+		}
+		
 
 		//ステータス計算
 		CalcStatus();

@@ -232,15 +232,17 @@ public abstract class UnitBase : MonoBehaviour {
 	public void DropModule(ModuleBase module) {
 
 		//装備を落とす動作
-		if(module) module.Drop();
-		//装備をはずす
-		Debug.Log("Drop");
-		switch(module.moduleType) {
-			case ModuleType.Weapon:
-				equipWeapon = null;
-				break;
+		if(module) {
+			module.Drop();
+
+			//装備をはずす
+			Debug.Log("Drop");
+			switch(module.moduleType) {
+				case ModuleType.Weapon:
+					equipWeapon = null;
+					break;
+			}
 		}
-		
 
 		//ステータス計算
 		CalcStatus();

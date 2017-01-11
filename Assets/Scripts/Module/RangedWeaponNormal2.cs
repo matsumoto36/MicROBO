@@ -28,7 +28,7 @@ public class RangedWeaponNormal2 : WeaponBase {
 		weaponModuleList = new List<IWeaponModule>();
 
 		////遠距離攻撃用モジュール設定
-		//RengedWeaponModule rangeModule = new RengedWeaponModule();
+		//RengedWeaponModule rangeModule = gameObject.AddComponent<RengedWeaponModule>();
 		//rangeModule.shotPre = shotPre;
 		//rangeModule.set = new NWayShotSystem.ShotSet(
 		//	rangeModule.shotPre.gameObject, 3, 20, true);
@@ -37,7 +37,7 @@ public class RangedWeaponNormal2 : WeaponBase {
 		//weaponModuleList.Add(rangeModule);
 
 		//近接攻撃用モジュール設定
-		MeleeWeaponModule meleeModule = new MeleeWeaponModule();
+		MeleeWeaponModule meleeModule =	gameObject.AddComponent<MeleeWeaponModule>();
 		meleeModule.meleePre = meleePre;
 		meleeModule.meleeDuration = 0.5f;
 		meleeModule.meleeDir = 179.0f;

@@ -37,6 +37,7 @@ GameObject:
   - component: {fileID: 4497213939346826}
   - component: {fileID: 58063931083260524}
   - component: {fileID: 114417002860706068}
+  - component: {fileID: 114581314982103264}
   m_Layer: 0
   m_Name: DebugShot
   m_TagString: UnitAttack
@@ -94,6 +95,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23b7a02b627059b4eb823431fa0fc88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114581314982103264
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1956837781482454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c74712b3d39064b9f57060e5417232, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!212 &212341497512594388

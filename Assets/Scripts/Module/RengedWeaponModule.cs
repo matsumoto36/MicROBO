@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 武器の機能:遠距離攻撃を追加する。
 /// </summary>
-public class RengedWeaponModule : IWeaponModule {
+public class RengedWeaponModule : MonoBehaviour, IWeaponModule {
 
 	public float shotSpeed {
 		get; set;

@@ -37,6 +37,7 @@ GameObject:
   - component: {fileID: 4544958443105450}
   - component: {fileID: 61835193953088310}
   - component: {fileID: 114046307152907238}
+  - component: {fileID: 114930245859013466}
   m_Layer: 0
   m_Name: UnitMelee
   m_TagString: UnitAttack
@@ -94,6 +95,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11a47816672911946a261e603ff118af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114930245859013466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1676614101499930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c74712b3d39064b9f57060e5417232, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!212 &212623342152326284

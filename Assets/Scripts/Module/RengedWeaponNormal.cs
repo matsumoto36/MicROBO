@@ -23,7 +23,7 @@ public class RengedWeaponNormal : WeaponBase {
 		waitTime = 0.5f;
 
 		//遠距離攻撃用モジュール設定
-		RengedWeaponModule rangeModule = new RengedWeaponModule();
+		RengedWeaponModule rangeModule = gameObject.AddComponent<RengedWeaponModule>();
 		rangeModule.shotPre = shotPre;
 		rangeModule.set = new NWayShotSystem.ShotSet(
 			rangeModule.shotPre.gameObject, 1, 90, true);

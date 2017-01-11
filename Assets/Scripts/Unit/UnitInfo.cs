@@ -60,8 +60,6 @@ public class UnitInfo : MonoBehaviour {
 
 		//表示
 		UISet[infoNum].UIBody.gameObject.SetActive(true);
-		Debug.Log("mouse : " + Input.mousePosition);
-		Debug.Log("uiset : " + UISet[infoNum].UIBody.sizeDelta);
 		//UIの位置を設定
 		if(Input.mousePosition.x > Screen.width - UISet[infoNum].UIBody.sizeDelta.x &&
 			Input.mousePosition.y < UISet[infoNum].UIBody.sizeDelta.y) {

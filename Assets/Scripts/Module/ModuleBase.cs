@@ -58,6 +58,7 @@ public abstract class ModuleBase : MonoBehaviour {
 	}
 
 	public virtual void Update() {
+
 		_waitTime += Time.deltaTime;
 	}
 	

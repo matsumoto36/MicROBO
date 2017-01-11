@@ -54,6 +54,7 @@ GameObject:
   - component: {fileID: 114068545906028266}
   - component: {fileID: 58966966791502222}
   - component: {fileID: 50642662156756174}
+  - component: {fileID: 114910544016558536}
   m_Layer: 0
   m_Name: Player
   m_TagString: Unit
@@ -164,6 +165,17 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: b197aed200c324f43beea7667ce51849, type: 3}
   shotPre: {fileID: 114417002860706068, guid: b30a4e4448ea3c2449e2aa372cb68987, type: 2}
   meleePre: {fileID: 114046307152907238, guid: dc839cfe32046c1499f3385e7c2ad810, type: 2}
+--- !u!114 &114910544016558536
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1857138877726992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c74712b3d39064b9f57060e5417232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212269213403773598
 SpriteRenderer:
   m_ObjectHideFlags: 1
